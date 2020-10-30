@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -14,19 +15,17 @@ public class Inventory : MonoBehaviour
 
     public void Open()
     {
-        Debug.Log("Open inventory");
         UI.Open(InventoryList);
     }
 
-    public void OpenForUseWith(IInteractable itemForUse)
+    public void OpenForUseWith(Func<GameObject, bool> callbackForSelectedItem)
     {
-        Debug.Log("Open inventory");
-        UI.Open(InventoryList, itemForUse);
+        UI.Open(InventoryList, callbackForSelectedItem);
     }
 
     public void Close()
     {
-        Debug.Log("Close inventory");
+        UI.Close();
     }
 
     public bool AddToInventory(GameObject objectToAdd)

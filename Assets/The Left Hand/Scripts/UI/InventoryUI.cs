@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class InventoryUI : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class InventoryUI : MonoBehaviour
     List<GameObject> m_CreatedButtons = new List<GameObject>();
     List<GameObject> m_ContextMenus = new List<GameObject>();
 
-    public void Open(List<GameObject> items, IInteractable itemToInteractWith = null)
+    public void Open(List<GameObject> items, Func<GameObject, bool> callbackForSelectedItem = null)
     {
         MakeActive.SetActive(true);
         foreach(GameObject item in items)
@@ -69,9 +70,9 @@ public class InventoryUI : MonoBehaviour
 
                     useButton.GetComponentInChildren<Button>().onClick.AddListener(() =>
                     {
-                        if (itemToInteractWith != null)
+                        if (callbackForSelectedItem != null)
                         {
-                            if (itemToInteractWith.Interact(item))
+                            if (callbackForSelectedItem(item))
                                 Debug.Log("Success!");
                             else
                                 Debug.Log("Failure");

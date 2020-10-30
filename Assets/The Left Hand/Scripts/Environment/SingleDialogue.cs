@@ -2,13 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Barricade : MonoBehaviour, IInteractable
+public class SingleDialogue : MonoBehaviour, IInteractable
 {
+    public string Dialogue;
     public string UseWord { get { return "Investigate"; } }
 
     public bool Interact()
     {
-        UIFactory.CreateDialogue("It looks like this was barricaded intentionally... I wonder why.");
+        UIFactory.CreateDialogue(Dialogue);
         return true;
     }
 

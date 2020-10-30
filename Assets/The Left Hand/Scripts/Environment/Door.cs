@@ -21,7 +21,7 @@ public class Door : MonoBehaviour, IInteractable
     {
         if (Locked)
         {
-            FindObjectOfType<Inventory>().OpenForUseWith(this);
+            FindObjectOfType<Inventory>().OpenForUseWith((item) => Interact(item));
             return true;
         }
 
@@ -44,13 +44,13 @@ public class Door : MonoBehaviour, IInteractable
         return false;
     }
 
-    void Open()
+    public void Open()
     {
         if (!Locked)
             Destroy(gameObject);
     }
 
-    void Unlock()
+    public void Unlock()
     {
         Locked = false;
     }

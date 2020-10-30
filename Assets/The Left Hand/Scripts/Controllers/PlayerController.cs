@@ -14,7 +14,6 @@ public class PlayerController : MonoBehaviour
             return m_CurrentWeapon;
         }
     }
-    //public List<IInteractable> Interactables = new List<IInteractable>();
 
     private float m_BaseMoveSpeed;
     private bool m_IsAttacking;
@@ -56,17 +55,6 @@ public class PlayerController : MonoBehaviour
             inventory.Open();
         }
 
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-            var inventory = GetComponent<Inventory>();
-            foreach (var i in inventory.InventoryList)
-            {
-                var weapon = i?.GetComponent<IWeapon>();
-                if (weapon != null)
-                    Equip(weapon);
-            }
-        }
-
         if(Input.GetKeyDown(KeyCode.R))
         {
             if(m_CurrentWeapon is IReloadable)
@@ -75,25 +63,6 @@ public class PlayerController : MonoBehaviour
                 Debug.Log("Leftover bullets: " + leftover);
             }
         }
-
-        //if(Input.GetKeyDown(KeyCode.Space))
-        //{
-        //    if (Interactables.Count > 0)
-        //    {
-        //        var inventory = GetComponent<Inventory>();
-        //        var key = inventory.InventoryList.Find(g => g != null && g.GetComponent<Key>() != null);
-        //        if (key != null)
-        //        {
-        //            if (Interactables[0].Interact(key))
-        //                inventory.RemoveFromInventory(key);
-        //        }
-        //        else
-        //        {
-        //            if (Interactables[0].Interact())
-        //                Interactables.RemoveAt(0);
-        //        }
-        //    }
-        //}
     }
 
     void CheckForAttacking()

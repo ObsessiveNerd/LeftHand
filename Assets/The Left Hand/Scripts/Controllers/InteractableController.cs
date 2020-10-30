@@ -7,6 +7,7 @@ public class InteractableController : MonoBehaviour
 {
     public GameObject TextPrefab;
     public GameObject Canvas;
+    public float Distance;
 
     IInteractable m_CurrentObject;
     GameObject m_TextInstance;
@@ -26,7 +27,7 @@ public class InteractableController : MonoBehaviour
         if(Physics.Raycast(ray, out RaycastHit info))
         {
             IInteractable interactable = info.collider.gameObject.GetComponent<IInteractable>();
-            if (interactable != null && Vector3.Distance(info.collider.transform.position, m_Player.position) < 2.0f)
+            if (interactable != null && Vector3.Distance(info.collider.transform.position, m_Player.position) < Distance)
             {
                 m_CurrentObject = interactable;
                 if (m_TextInstance != null)
