@@ -10,21 +10,37 @@ public class GrandfatherClock : MonoBehaviour, IInteractable
     public string CorrectTime;
     public string UseWord { get { return "Look"; } }
     public GameObject SubmitTime;
+    public GameObject KeyReward;
 
+    bool m_IsOpen = false;
+    bool m_KeyTook = false;
     string m_Time = "2:46";
 
     public bool Interact()
     {
-        UIFactory.CreateDialogue($"The clock says it's {m_Time}...", new FactoryButton("Change clock", () =>
+        if (!m_IsOpen)
         {
-            GameObject go = Instantiate(SubmitTime, GameObject.Find("Canvas").transform);
-            go.GetComponentInChildren<TMP_InputField>().onEndEdit.AddListener((data) =>
+            UIFactory.CreateDialogue($"The clock says it's {m_Time}... There appears to be a pair of bolt cutters locked inside the clock.",
+                true,
+                null,
+                new FactoryButton("Change clock", () =>
             {
-                Submit(data);
-                Destroy(go);
-            });
-        }));
-        //UIFactory.CreateDialogue("The clock says it's 2:48... that isn't right.");
+                GameObject go = Instantiate(SubmitTime, GameObject.Find("Canvas").transform);
+                go.GetComponentInChildren<TMP_InputField>().onEndEdit.AddListener((data) =>
+                {
+                    Submit(data);
+                    Destroy(go);
+                });
+            }));
+        }
+        else if(m_IsOpen && !m_KeyTook)
+        {
+            GiveKey();
+        }
+        else
+        {
+            UIFactory.CreateDialogue("It's a beautiful grandfather clock.");
+        }
         return true;
     }
 
@@ -39,11 +55,25 @@ public class GrandfatherClock : MonoBehaviour, IInteractable
         {
             m_Time = data;
             if (data == CorrectTime)
-                Debug.Log("That worked!");
+            {
+                UIFactory.CreateDialogue("The door on the clock is unlocked now!", true, () => GiveKey());
+                m_IsOpen = true;
+            }
             else
-                Debug.Log("Hmm... nothing changed.");
+                UIFactory.CreateDialogue("Hmm... That didn't appear to do anything.");
         }
         else
-            Debug.Log("That... it's a time...");
+            UIFactory.CreateDialogue("That isn't a time you fuck.");
+    }
+
+    void GiveKey()
+    {
+        UIFactory.CreateDialogue("Take the pair of bolt cutters?", true, null, 
+            new FactoryButton("Take", () =>
+        {
+            FindObjectOfType<Inventory>().AddToInventory(KeyReward);
+            m_KeyTook = true;
+            UIFactory.Clear();
+        }));
     }
 }

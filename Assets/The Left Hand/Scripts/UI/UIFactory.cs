@@ -25,6 +25,8 @@ public class UIFactory : MonoBehaviour
     static UIFactory m_Instance;
     static GameObject m_Canvas;
 
+    static GameObject m_CurrentDialoge = null;
+
     void Start()
     {
         m_Canvas = FindObjectOfType<Canvas>().gameObject;
@@ -33,11 +35,22 @@ public class UIFactory : MonoBehaviour
         m_Instance = this;
     }
 
-    public static void CreateDialogue(string text, params FactoryButton[] buttons)
+    public static void Clear()
     {
-        GameObject dialogueOption = Instantiate(m_Instance.DialogueOption, m_Canvas.transform);
-        dialogueOption.GetComponentInChildren<TextMeshProUGUI>().text = text;
-        Transform buttonArea = dialogueOption.transform.Find("ButtonArea");
+        if (m_CurrentDialoge != null)
+        {
+            Destroy(m_CurrentDialoge);
+            m_CurrentDialoge = null;
+        }
+    }
+
+    public static void CreateDialogue(string text, bool hasLeaveButton = true, Action leaveCallback = null, params FactoryButton[] buttons)
+    {
+        Clear();
+
+        m_CurrentDialoge = Instantiate(m_Instance.DialogueOption, m_Canvas.transform);
+        m_CurrentDialoge.GetComponentInChildren<TextMeshProUGUI>().text = text;
+        Transform buttonArea = m_CurrentDialoge.transform.Find("ButtonArea");
         foreach(FactoryButton button in buttons)
         {
             GameObject newButton = Instantiate(m_Instance.Button, buttonArea);
@@ -45,9 +58,16 @@ public class UIFactory : MonoBehaviour
             newButton.GetComponent<Button>().onClick.AddListener(() => button.ButtonAction());
         }
 
-        GameObject cancelButton = Instantiate(m_Instance.Button, buttonArea);
-        cancelButton.GetComponentInChildren<TextMeshProUGUI>().text = "Leave";
-        cancelButton.GetComponent<Button>().onClick.AddListener(() => Destroy(dialogueOption));
+        if (hasLeaveButton)
+        {
+            GameObject cancelButton = Instantiate(m_Instance.Button, buttonArea);
+            cancelButton.GetComponentInChildren<TextMeshProUGUI>().text = "Leave";
+            cancelButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                Clear();
+                leaveCallback?.Invoke();
+            });
+        }
     }
 
     public static void CreatePuzzleInput(GameObject uiObject, Action submit)
