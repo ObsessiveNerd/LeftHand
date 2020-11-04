@@ -51,12 +51,7 @@ public class UIFactory : MonoBehaviour
         m_CurrentDialoge = Instantiate(m_Instance.DialogueOption, m_Canvas.transform);
         m_CurrentDialoge.GetComponentInChildren<TextMeshProUGUI>().text = text;
         Transform buttonArea = m_CurrentDialoge.transform.Find("ButtonArea");
-        foreach(FactoryButton button in buttons)
-        {
-            GameObject newButton = Instantiate(m_Instance.Button, buttonArea);
-            newButton.GetComponentInChildren<TextMeshProUGUI>().text = button.ButtonText;
-            newButton.GetComponent<Button>().onClick.AddListener(() => button.ButtonAction());
-        }
+        CreateButtons(buttonArea, buttons);
 
         if (hasLeaveButton)
         {
@@ -68,6 +63,23 @@ public class UIFactory : MonoBehaviour
                 leaveCallback?.Invoke();
             });
         }
+    }
+
+    static void CreateButtons(Transform parent, FactoryButton[] buttons)
+    {
+        foreach (FactoryButton button in buttons)
+        {
+            GameObject newButton = Instantiate(m_Instance.Button, parent);
+            newButton.GetComponentInChildren<TextMeshProUGUI>().text = button.ButtonText;
+            newButton.GetComponent<Button>().onClick.AddListener(() => button.ButtonAction());
+        }
+    }
+
+    public static void CreateCustomUI(GameObject uiObject, params FactoryButton[] buttons)
+    {
+        Clear();
+        m_CurrentDialoge = Instantiate(uiObject, m_Canvas.transform);
+        CreateButtons(m_CurrentDialoge.transform, buttons);
     }
 
     public static void CreatePuzzleInput(GameObject uiObject, Action submit)

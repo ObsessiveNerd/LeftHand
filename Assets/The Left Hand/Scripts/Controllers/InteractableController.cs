@@ -42,6 +42,12 @@ public class InteractableController : MonoBehaviour
                 m_CurrentObject = null;
             }
         }
+        else
+        {
+            Destroy(m_TextInstance);
+            m_TextInstance = null;
+            m_CurrentObject = null;
+        }
 
         if (Input.GetMouseButtonDown(0) && m_CurrentObject != null)
             m_CurrentObject.Interact();

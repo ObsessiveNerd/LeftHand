@@ -159,8 +159,6 @@ namespace TheraBytes.BetterUi
         static bool isDirty;
 
 #if UNITY_EDITOR
-        static Type gameViewType = null;
-        static UnityEditor.EditorWindow gameViewWindow = null;
         static Version unityVersion;
 
         static ScreenTypeConditions simulatedScreenConfig;

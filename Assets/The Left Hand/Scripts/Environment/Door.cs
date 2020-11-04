@@ -6,6 +6,7 @@ public class Door : MonoBehaviour, IInteractable
 {
     public Key KeyToUnlock;
     public bool Locked;
+    public string DescriptionText;
 
     public string UseWord
     {
@@ -21,7 +22,14 @@ public class Door : MonoBehaviour, IInteractable
     {
         if (Locked)
         {
-            FindObjectOfType<Inventory>().OpenForUseWith((item) => Interact(item));
+            UIFactory.CreateDialogue(DescriptionText, true, null, 
+                new FactoryButton("Use Item", 
+                () =>
+                {
+                    UIFactory.Clear();
+                    FindObjectOfType<Inventory>().OpenForUseWith((item) => Interact(item));
+                }));
+            
             return true;
         }
 
@@ -52,6 +60,7 @@ public class Door : MonoBehaviour, IInteractable
 
     public void Unlock()
     {
+        UIFactory.CreateDialogue("The door is unlocked now.");
         Locked = false;
     }
 }
