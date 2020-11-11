@@ -19,19 +19,17 @@ public class InteractingWithUnlocksSomething : MonoBehaviour, IInteractable
     public bool Interact()
     {
         if (!m_PuzzleComplete)
-        {
-            UIFactory.CreateDialogue(InteractionDialogue, true, null, new FactoryButton("Use", () =>
-            {
-                m_Unlockable?.Unlock();
-                m_PuzzleComplete = true;
-                UIFactory.Clear();
-            }));
-        }
+            UIFactory.CreateDialogue(InteractionDialogue, true, null);
         else
-        {
             UIFactory.CreateDialogue("Nothing of interest here.");
-        }
         return true;
+    }
+
+    public void CompletePuzzle()
+    {
+        m_Unlockable?.Unlock();
+        m_PuzzleComplete = true;
+        UIFactory.Clear();
     }
 
     public bool Interact(GameObject objectToUse)
