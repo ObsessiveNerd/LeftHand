@@ -7,6 +7,7 @@ public class InteractingWithUnlocksSomething : MonoBehaviour, IInteractable
     public string UseWord => "Investigate";
     public GameObject Unlockable;
     public string InteractionDialogue;
+    public GameObject Puzzle;
 
     bool m_PuzzleComplete = false;
     IUnlockable m_Unlockable;
@@ -19,7 +20,13 @@ public class InteractingWithUnlocksSomething : MonoBehaviour, IInteractable
     public bool Interact()
     {
         if (!m_PuzzleComplete)
-            UIFactory.CreateDialogue(InteractionDialogue, true, null);
+            UIFactory.CreateDialogue(InteractionDialogue, true, null, new FactoryButton("Interact", () =>
+            {
+                UIFactory.Clear();
+                Puzzle.SetActive(true);
+                var board = Puzzle.GetComponent<ChessBoard>();
+                board.Setup(this);
+            }));
         else
             UIFactory.CreateDialogue("Nothing of interest here.");
         return true;

@@ -38,9 +38,8 @@ public class ChessBoard : MonoBehaviour
     }
 
     public ChessMove WinningMove;
-
+    
     InteractingWithUnlocksSomething m_InteractionObject;
-    Dictionary<ChessSquare, ChessPiece> m_PieceArrangement = new Dictionary<ChessSquare, ChessPiece>();
     Dictionary<Vector2, ChessSquare> m_LocationToSquareMap = new Dictionary<Vector2, ChessSquare>();
     RectTransform m_Rect;
     float startPosSpacing = 45f;
@@ -67,8 +66,8 @@ public class ChessBoard : MonoBehaviour
             {
                 var position = new Vector2(i, k);
                 var square = new ChessSquare(ConvertNumberToAlpha(baseXIndex), (baseYIndex + 1), position);
-                m_PieceArrangement.Add(square, null);
                 m_LocationToSquareMap.Add(position, square);
+                //Instantiate(WinningMove.Piece, position, Quaternion.identity, transform);
                 baseYIndex++;
             }
             baseXIndex++;
@@ -90,6 +89,7 @@ public class ChessBoard : MonoBehaviour
         {
             Debug.Log("Winning move");
             m_InteractionObject?.CompletePuzzle();
+            UIFactory.CreateDialogue("That did something...", true, () => gameObject.SetActive(false));
             return true;
         }
         Debug.Log("Bad move");
