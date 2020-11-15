@@ -19,6 +19,7 @@ public struct FactoryButton
 
 public class UIFactory : MonoBehaviour
 {
+    public static Action<bool> UIEnabled;
     public GameObject DialogueOption;
     public GameObject Button;
 
@@ -41,6 +42,7 @@ public class UIFactory : MonoBehaviour
         {
             Destroy(m_CurrentDialoge);
             m_CurrentDialoge = null;
+            UIEnabled(false);
         }
     }
 
@@ -63,6 +65,8 @@ public class UIFactory : MonoBehaviour
                 leaveCallback?.Invoke();
             });
         }
+
+        UIEnabled(true);
     }
 
     static void CreateButtons(Transform parent, FactoryButton[] buttons)
@@ -80,15 +84,16 @@ public class UIFactory : MonoBehaviour
         Clear();
         m_CurrentDialoge = Instantiate(uiObject, m_Canvas.transform);
         CreateButtons(m_CurrentDialoge.transform, buttons);
+        UIEnabled(true);
     }
 
     public static void CreatePuzzleInput(GameObject uiObject, Action submit)
     {
-
+        UIEnabled(true);
     }
 
     public static void CreatePuzzleInput(GameObject uiObject, Action<object> submit)
     {
-
+        UIEnabled(true);
     }
 }

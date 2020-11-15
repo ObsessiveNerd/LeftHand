@@ -24,8 +24,8 @@ public class InteractingWithUnlocksSomething : MonoBehaviour, IInteractable
             {
                 UIFactory.Clear();
                 Puzzle.SetActive(true);
-                var board = Puzzle.GetComponent<ChessBoard>();
-                board.Setup(this);
+                var puzzle = Puzzle.GetComponent<IPuzzle>();
+                puzzle.Setup(this);
             }));
         else
             UIFactory.CreateDialogue("Nothing of interest here.");
@@ -36,6 +36,7 @@ public class InteractingWithUnlocksSomething : MonoBehaviour, IInteractable
     {
         m_Unlockable?.Unlock();
         m_PuzzleComplete = true;
+        Puzzle.SetActive(false);
         UIFactory.Clear();
     }
 

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ChessBoard : MonoBehaviour
+public class ChessBoard : Escape, IPuzzle
 {
     [Serializable]
     public struct ChessSquare
@@ -67,7 +67,6 @@ public class ChessBoard : MonoBehaviour
                 var position = new Vector2(i, k);
                 var square = new ChessSquare(ConvertNumberToAlpha(baseXIndex), (baseYIndex + 1), position);
                 m_LocationToSquareMap.Add(position, square);
-                //Instantiate(WinningMove.Piece, position, Quaternion.identity, transform);
                 baseYIndex++;
             }
             baseXIndex++;
@@ -87,12 +86,10 @@ public class ChessBoard : MonoBehaviour
 
         if (WinningMove.Piece == piece && WinningMove.Square == nearestSquare)
         {
-            Debug.Log("Winning move");
             m_InteractionObject?.CompletePuzzle();
             UIFactory.CreateDialogue("That did something...", true, () => gameObject.SetActive(false));
             return true;
         }
-        Debug.Log("Bad move");
         return false;
     }
 
