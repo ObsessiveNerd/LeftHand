@@ -77,6 +77,8 @@ public class InventoryUI : MonoBehaviour
                             else
                                 Debug.Log("Failure");
                         }
+                        else if (item.GetComponent<IUseable>() != null)
+                            item.GetComponent<IUseable>().Use();
                         else
                             Debug.Log("Failure");
 

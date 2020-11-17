@@ -25,7 +25,9 @@ public class HealthController : MonoBehaviour
 
     public void Heal(int healAmount)
     {
+        Debug.Log("Before: " + Health);
         Health = Mathf.Clamp(Health + healAmount, 0, m_MaxHealth);
+        Debug.Log("After: " + Health);
     }
 
     public void Die()
