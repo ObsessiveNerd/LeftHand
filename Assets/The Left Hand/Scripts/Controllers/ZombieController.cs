@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ZombieController : MonoBehaviour
 {
@@ -21,12 +22,20 @@ public class ZombieController : MonoBehaviour
     GameObject m_Target;
     Rigidbody m_RigidBody;
     bool m_IsAttacking = false;
+    NavMeshAgent m_Agent;
 
     void Start()
     {
         m_State = ZombieState.Waiting;
         m_Target = GameObject.FindGameObjectWithTag("Player");
         m_RigidBody = GetComponent<Rigidbody>();
+        InitNavAgent();
+    }
+
+    void InitNavAgent()
+    {
+        m_Agent = GetComponent<NavMeshAgent>();
+        m_Agent.speed = MoveSpeed;
     }
 
     void Update()
@@ -40,6 +49,7 @@ public class ZombieController : MonoBehaviour
         switch (m_State)
         {
             case ZombieState.Waiting:
+                m_Agent.isStopped = true;
                 break;
             case ZombieState.Moving:
                 Move();
@@ -68,14 +78,17 @@ public class ZombieController : MonoBehaviour
 
     void Move()
     {
+        m_Agent.isStopped = false;
+        m_Agent.SetDestination(m_Target.transform.position);
         Vector3 direction = (m_Target.transform.position - transform.position).normalized;
-        m_RigidBody.velocity = direction * MoveSpeed;
+        //m_RigidBody.velocity = direction * MoveSpeed;
         Quaternion.LookRotation(direction);
     }
 
     IEnumerator Attack()
     {
         m_IsAttacking = true;
+        m_Agent.isStopped = true;
         m_Target.GetComponent<HealthController>().TakeDamage(Damage);
         yield return new WaitForSeconds(AttackSpeed);
         m_IsAttacking = false;
