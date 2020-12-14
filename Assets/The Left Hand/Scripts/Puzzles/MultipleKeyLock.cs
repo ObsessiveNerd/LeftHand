@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class MultipleKeyLock : MonoBehaviour, IPuzzle
+public class MultipleKeyLock : Escape, IPuzzle
 {
     public List<GameObject> Locks;
     public bool Locked;

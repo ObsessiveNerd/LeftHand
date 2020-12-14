@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine.UI;
 using System;
 
-public class InventoryUI : MonoBehaviour
+public class InventoryUI : Escape
 {
     public GameObject MakeActive;
     public GameObject Grid;
@@ -113,6 +113,14 @@ public class InventoryUI : MonoBehaviour
         });
 
         m_CreatedButtons.Add(closeButton);
+    }
+
+    protected override void Cleanup()
+    {
+        if (m_ContextMenus.Count > 0)
+            ClearContextMenus();
+        else
+            Close();
     }
 
     void ClearContextMenus()
