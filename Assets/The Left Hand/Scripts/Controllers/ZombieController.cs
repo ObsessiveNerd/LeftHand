@@ -17,6 +17,7 @@ public class ZombieController : MonoBehaviour
     public float AttackRange;
     public float AttackSpeed;
     public int Damage;
+    public Animator Animator;
 
     ZombieState m_State;
     GameObject m_Target;
@@ -46,15 +47,23 @@ public class ZombieController : MonoBehaviour
         if (ShouldAttack())
             m_State = ZombieState.Attacking;
 
+        Debug.Log(m_State);
         switch (m_State)
         {
             case ZombieState.Waiting:
+                Animator.SetBool(AnimatorVariables.Idle, true);
+                Animator.SetBool(AnimatorVariables.Run, false);
                 m_Agent.isStopped = true;
                 break;
             case ZombieState.Moving:
+                Animator.SetBool(AnimatorVariables.Idle, false);
+                Animator.SetBool(AnimatorVariables.Run, true);
                 Move();
                 break;
             case ZombieState.Attacking:
+                Animator.SetBool(AnimatorVariables.Idle, true);
+                Animator.SetBool(AnimatorVariables.Run, false);
+                Animator.SetTrigger(AnimatorVariables.Attack);
                 StartCoroutine(Attack());
                 break;
         }

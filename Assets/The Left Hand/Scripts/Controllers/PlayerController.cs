@@ -6,6 +6,7 @@ using TMPro;
 public class PlayerController : MonoBehaviour
 {
     public TextMeshProUGUI Ammo;
+    public Animator Animator;
     public float MoveSpeed;
     public IWeapon CurrentEquipment
     {
@@ -94,28 +95,53 @@ public class PlayerController : MonoBehaviour
         }
 
         if (m_IsAttacking && Input.GetMouseButtonDown(0))
-            m_CurrentWeapon?.Attack(gameObject, transform.forward);
+        {
+            if (m_CurrentWeapon != null)
+            {
+                Animator.SetTrigger(AnimatorVariables.Attack);
+                m_CurrentWeapon?.Attack(gameObject, transform.forward);
+            }
+        }
     }
 
     void ProcessMovement()
     {
         if (m_IsAttacking)
+        {
+            Animator.SetBool(AnimatorVariables.Idle, false);
+            Animator.SetBool(AnimatorVariables.Run, false);
             return;
+        }
 
         Vector3 movement = new Vector3(Input.GetAxis("Horizontal"), 0f, Input.GetAxis("Vertical"));//.normalized;
         m_RigidBody.velocity = movement * MoveSpeed;
 
         if (movement != Vector3.zero)
+        {
+            Animator.SetBool(AnimatorVariables.Idle, false);
+            Animator.SetBool(AnimatorVariables.Run, true);
             transform.rotation = Quaternion.LookRotation(movement);
+        }
+        else
+        {
+            Animator.SetBool(AnimatorVariables.Run, false);
+            Animator.SetBool(AnimatorVariables.Idle, true);
+        }
     }
 
     public void Equip(IWeapon weapon)
     {
         m_CurrentWeapon = weapon;
+        if (m_CurrentWeapon is Handgun)
+            Animator.SetBool(AnimatorVariables.HasGun, true);
+        if(m_CurrentWeapon is Knife)
+            Animator.SetBool(AnimatorVariables.HasMelee, true);
     }
 
     public void UnequipWeapon()
     {
         m_CurrentWeapon = null;
+        Animator.SetBool(AnimatorVariables.HasMelee, false);
+        Animator.SetBool(AnimatorVariables.HasGun, false);
     }
 }
