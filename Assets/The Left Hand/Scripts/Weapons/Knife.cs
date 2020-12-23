@@ -2,12 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Knife : Cooldown, IWeapon, IInteractable
+public class Knife : InteractableObject, IWeapon
 {
     public int Damage;
     public float Distance;
+    public GameObject Prefab;
 
-    public string UseWord
+    Vector3 m_StartPosition;
+    Quaternion m_StartRot;
+    Vector3 m_StartScale;
+    Cooldown m_Cooldown;
+    public override string UseWord
     {
         get 
         {
@@ -23,6 +28,11 @@ public class Knife : Cooldown, IWeapon, IInteractable
         }
     }
 
+    void Start()
+    {
+        m_Cooldown = new Cooldown();
+    }
+
     public void Attack(GameObject source, Vector3 direction)
     {
         Vector3 mouse = Input.mousePosition;
@@ -32,22 +42,22 @@ public class Knife : Cooldown, IWeapon, IInteractable
         {
             if (hitInfo.collider.gameObject.tag == "Enemy" &&
                 Vector3.Distance(hitInfo.collider.gameObject.transform.position, source.transform.position) < Distance &&
-                IsReady)
+                m_Cooldown.IsReady)
             {
                 var healthController = hitInfo.collider.gameObject.GetComponent<HealthController>();
                 healthController.TakeDamage(Damage);
-                StartCoroutine(BeginCooldown());
+                StartCoroutine(m_Cooldown.BeginCooldown());
             }
         }
     }
 
-    public bool Interact()
+    public override bool Interact()
     {
         Pickup.PickupItem(gameObject);
         return true;
     }
 
-    public bool Interact(GameObject objectToUse)
+    public override bool Interact(GameObject objectToUse)
     {
         return false;
     }

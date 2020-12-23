@@ -27,6 +27,7 @@ public class UIFactory : MonoBehaviour
     static GameObject m_Canvas;
 
     static GameObject m_CurrentDialoge = null;
+    static List<GameObject> m_PuzzleUIs = new List<GameObject>();
 
     void Start()
     {
@@ -44,6 +45,9 @@ public class UIFactory : MonoBehaviour
             m_CurrentDialoge = null;
             UIEnabled(false);
         }
+
+        foreach (var ui in m_PuzzleUIs)
+            ui.SetActive(false);
     }
 
     public static void CreateDialogue(string text, bool hasLeaveButton = true, Action leaveCallback = null, params FactoryButton[] buttons)
@@ -67,6 +71,14 @@ public class UIFactory : MonoBehaviour
         }
 
         UIEnabled(true);
+    }
+
+    public static void RegisterUI(GameObject UI)
+    {
+        if (!m_PuzzleUIs.Contains(UI))
+            m_PuzzleUIs.Add(UI);
+
+        UIEnabled(UI.activeInHierarchy);
     }
 
     static void CreateButtons(Transform parent, FactoryButton[] buttons)

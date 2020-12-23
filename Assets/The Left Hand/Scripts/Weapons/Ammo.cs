@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Ammo : MonoBehaviour, IInteractable
+public class Ammo : InteractableObject
 {
     public int NumberOfBullets;
 
-    public string UseWord => throw new System.NotImplementedException();
+    public override string UseWord => throw new System.NotImplementedException();
 
-    public bool Interact()
+    public override bool Interact()
     {
         Pickup.PickupItem(gameObject);
         return true;
     }
 
-    public bool Interact(GameObject objectToUse)
+    public override bool Interact(GameObject objectToUse)
     {
         return false;
     }

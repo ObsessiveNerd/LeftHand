@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour
     public TextMeshProUGUI Ammo;
     public Animator Animator;
     public float MoveSpeed;
+    public GameObject RightHandContainer;
+
     public IWeapon CurrentEquipment
     {
         get
@@ -20,6 +22,7 @@ public class PlayerController : MonoBehaviour
     private bool m_IsAttacking;
     private Rigidbody m_RigidBody;
     private IWeapon m_CurrentWeapon;
+    private GameObject m_CurrentWeaponInstance;
 
     void Start()
     {
@@ -131,11 +134,17 @@ public class PlayerController : MonoBehaviour
 
     public void Equip(IWeapon weapon)
     {
-        m_CurrentWeapon = weapon;
-        if (m_CurrentWeapon is Handgun)
-            Animator.SetBool(AnimatorVariables.HasGun, true);
-        if(m_CurrentWeapon is Knife)
-            Animator.SetBool(AnimatorVariables.HasMelee, true);
+        if (weapon != null)
+        {
+            m_CurrentWeapon = weapon;
+            if (m_CurrentWeapon is Handgun)
+                Animator.SetBool(AnimatorVariables.HasGun, true);
+            if (m_CurrentWeapon is Knife)
+                Animator.SetBool(AnimatorVariables.HasMelee, true);
+
+            m_CurrentWeaponInstance = Instantiate(Resources.Load<GameObject>(weapon.WeaponName), RightHandContainer.transform);
+            m_CurrentWeaponInstance.GetComponent<InteractableObject>().enabled = false;
+        }
     }
 
     public void UnequipWeapon()
@@ -143,5 +152,6 @@ public class PlayerController : MonoBehaviour
         m_CurrentWeapon = null;
         Animator.SetBool(AnimatorVariables.HasMelee, false);
         Animator.SetBool(AnimatorVariables.HasGun, false);
+        Destroy(m_CurrentWeaponInstance);
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Chest : MonoBehaviour, IInteractable, IUnlockable
+public class Chest : InteractableObject, IUnlockable
 {
     public List<GameObject> ItemsContained;
     public bool Locked;
@@ -14,7 +14,7 @@ public class Chest : MonoBehaviour, IInteractable, IUnlockable
     bool m_IsOpen = false;
     string m_KeyId;
 
-    public string UseWord
+    public override string UseWord
     {
         get
         {
@@ -29,7 +29,7 @@ public class Chest : MonoBehaviour, IInteractable, IUnlockable
         Locked = false;
     }
 
-    public bool Interact()
+    public override bool Interact()
     {
         if (Locked)
         {
@@ -44,7 +44,7 @@ public class Chest : MonoBehaviour, IInteractable, IUnlockable
         return true;
     }
 
-    public bool Interact(GameObject objectToUse)
+    public override bool Interact(GameObject objectToUse)
     {
         if ((!m_UsesKey || objectToUse.name == m_KeyId) && Locked)
         {
@@ -57,7 +57,7 @@ public class Chest : MonoBehaviour, IInteractable, IUnlockable
         return false;
     }
 
-    void Open()
+    protected virtual void Open()
     {
         if (ItemsContained.Count > 0)
         {
@@ -99,8 +99,9 @@ public class Chest : MonoBehaviour, IInteractable, IUnlockable
         }
     }
 
-    void Update()
+    new void Update()
     {
+        base.Update();
         if (Input.GetKeyDown(KeyCode.Escape) && m_IsOpen)
             Close();
     }

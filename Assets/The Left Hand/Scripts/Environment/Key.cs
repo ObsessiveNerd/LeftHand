@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Key : MonoBehaviour, IInteractable
+public class Key : InteractableObject
 {
     public string KeyName;
+    public bool DestroyAfterUse;
 
     public int KeyId
     {
@@ -14,7 +15,7 @@ public class Key : MonoBehaviour, IInteractable
         }
     }
 
-    public string UseWord
+    public override string UseWord
     {
         get
         {
@@ -22,14 +23,13 @@ public class Key : MonoBehaviour, IInteractable
         }
     }
 
-    public bool Interact()
+    public override bool Interact()
     {
-        FindObjectOfType<Inventory>().AddToInventory(gameObject);
-        gameObject.SetActive(false);
+        Pickup.PickupItem(gameObject);
         return true;
     }
 
-    public bool Interact(GameObject objectToUse)
+    public override bool Interact(GameObject objectToUse)
     {
         return false;
     }

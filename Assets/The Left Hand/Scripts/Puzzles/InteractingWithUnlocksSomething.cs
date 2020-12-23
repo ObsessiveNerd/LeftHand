@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class InteractingWithUnlocksSomething : MonoBehaviour, IInteractable
+public class InteractingWithUnlocksSomething : InteractableObject
 {
-    public string UseWord => "Investigate";
+    public override string UseWord => "Investigate";
     public GameObject Unlockable;
     public string InteractionDialogue;
     public GameObject Puzzle;
@@ -17,13 +17,14 @@ public class InteractingWithUnlocksSomething : MonoBehaviour, IInteractable
         m_Unlockable = Unlockable.GetComponent<IUnlockable>();
     }
 
-    public bool Interact()
+    public override bool Interact()
     {
         if (!m_PuzzleComplete)
             UIFactory.CreateDialogue(InteractionDialogue, true, null, new FactoryButton("Interact", () =>
             {
                 UIFactory.Clear();
                 Puzzle.SetActive(true);
+                UIFactory.RegisterUI(Puzzle);
                 var puzzle = Puzzle.GetComponent<IPuzzle>();
                 puzzle.Setup(this);
             }));
@@ -40,7 +41,7 @@ public class InteractingWithUnlocksSomething : MonoBehaviour, IInteractable
         UIFactory.Clear();
     }
 
-    public bool Interact(GameObject objectToUse)
+    public override bool Interact(GameObject objectToUse)
     {
         return false;
     }

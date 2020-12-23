@@ -11,44 +11,49 @@ public class InteractableController : MonoBehaviour
 
     IInteractable m_CurrentObject;
     GameObject m_TextInstance;
-    bool m_IsInteracting = false;
     bool m_UIEnabled;
-    Transform m_Player;
+    GameObject m_ClosestInteractable;
 
     void Start()
     {
-        m_Player = GameObject.FindGameObjectWithTag("Player").transform;
         UIFactory.UIEnabled += (enabled) =>
         {
             m_UIEnabled = enabled;
         };
     }
 
-    void Update()
+    public void SubmitInteractable(GameObject interactable)
     {
-        if(m_UIEnabled)
+        if (m_ClosestInteractable == null)
+        {
+            m_ClosestInteractable = interactable;
+            return;
+        }
+
+        if (Vector3.Distance(interactable.transform.position, transform.position) < Vector3.Distance(m_ClosestInteractable.transform.position, transform.position))
+            m_ClosestInteractable = interactable;
+
+        CheckIfClosestInteractableIsCloseEnoughToInteract();
+    }
+
+    private void CheckIfClosestInteractableIsCloseEnoughToInteract()
+    {
+        if (m_UIEnabled)
         {
             Clear();
             return;
         }
 
-        Vector3 mouse = Input.mousePosition;
-        Ray ray = Camera.main.ScreenPointToRay(mouse);
-
-        if(Physics.Raycast(ray, out RaycastHit info))
+        if (Vector3.Distance(m_ClosestInteractable.transform.position, transform.position) < Distance)
         {
-            IInteractable interactable = info.collider.gameObject.GetComponent<IInteractable>();
-            if (interactable != null && Vector3.Distance(info.collider.transform.position, m_Player.position) < Distance)
+            IInteractable interactable = m_ClosestInteractable.GetComponent<IInteractable>();
+            if (interactable != null)
             {
                 m_CurrentObject = interactable;
                 if (m_TextInstance != null)
                     Destroy(m_TextInstance);
-                m_TextInstance = Instantiate(TextPrefab, mouse, Quaternion.identity, Canvas.transform);
+                m_TextInstance = Instantiate(TextPrefab, new Vector3(Screen.width/2, Screen.height/2, 0f), Quaternion.identity, Canvas.transform);
                 m_TextInstance.GetComponent<TextMeshProUGUI>().text = m_CurrentObject.UseWord;
-            }
-            else if(m_CurrentObject != null && !m_IsInteracting)
-            {
-                Clear();
             }
         }
         else
@@ -56,7 +61,7 @@ public class InteractableController : MonoBehaviour
             Clear();
         }
 
-        if (Input.GetMouseButtonDown(0) && m_CurrentObject != null)
+        if (Input.GetKeyDown(KeyCode.E) && m_CurrentObject != null)
             m_CurrentObject.Interact();
     }
 

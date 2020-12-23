@@ -2,11 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Handgun : Cooldown, IWeapon, IReloadable, IInteractable
+public class Handgun : InteractableObject, IWeapon, IReloadable, IInventoryItem
 {
     public GameObject Bullet;
     public int StartingBullets;
     public int kMaxBullets = 10;
+    public GameObject Prefab;
 
     private int m_BulletCount;
 
@@ -34,13 +35,15 @@ public class Handgun : Cooldown, IWeapon, IReloadable, IInteractable
         }
     }
 
-    public string UseWord
+    public override string UseWord
     {
         get
         {
             return "Pickup Handgun";
         }
     }
+
+    GameObject IInventoryItem.Prefab => Prefab;
 
     void Start()
     {
@@ -71,13 +74,13 @@ public class Handgun : Cooldown, IWeapon, IReloadable, IInteractable
         m_BulletCount += (numberOfBullets - leftOverBullets);
     }
 
-    public bool Interact()
+    public override bool Interact()
     {
         Pickup.PickupItem(gameObject);
         return true;
     }
 
-    public bool Interact(GameObject objectToUse)
+    public override bool Interact(GameObject objectToUse)
     {
         return false;
     }

@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Cooldown : MonoBehaviour
+public class Cooldown
 {
     public float CooldownSeconds;
 
-    protected bool IsReady = true;
+    public bool IsReady = true;
 
-    protected IEnumerator BeginCooldown()
+    public IEnumerator BeginCooldown()
     {
         IsReady = false;
         yield return new WaitForSeconds(CooldownSeconds);

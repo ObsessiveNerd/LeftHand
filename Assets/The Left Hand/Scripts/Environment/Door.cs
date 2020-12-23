@@ -1,24 +1,32 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Door : MonoBehaviour, IInteractable, IUnlockable
+public class Door : InteractableObject, IUnlockable
 {
     public Key KeyToUnlock;
     public bool Locked;
+    public GameObject DestroyWhenUnlocked;
     public string DescriptionText;
+    public Action OnUnlock;
 
-    public string UseWord
+    bool m_IsOpen = false;
+    bool m_DoorStateChanging = false;
+
+    public override string UseWord
     {
         get
         {
             if (Locked)
                 return "Unlock";
-            return "Open";
+            if(!m_IsOpen)
+                return "Open";
+            return "Close";
         }
     }
 
-    public bool Interact()
+    public override bool Interact()
     {
         if (Locked)
         {
@@ -33,11 +41,14 @@ public class Door : MonoBehaviour, IInteractable, IUnlockable
             return true;
         }
 
-        Open();
+        if (!m_IsOpen)
+            Open();
+        else
+            Close();
         return true;
     }
 
-    public bool Interact(GameObject objectToUse)
+    public override bool Interact(GameObject objectToUse)
     {
         if (objectToUse == null)
             return false;
@@ -55,12 +66,44 @@ public class Door : MonoBehaviour, IInteractable, IUnlockable
     public void Open()
     {
         if (!Locked)
-            Destroy(gameObject);
+            StartCoroutine(ChangeDoorState(60f, true));
+    }
+
+    public void Close()
+    {
+        StartCoroutine(ChangeDoorState(-60f, false));
+    }
+
+    IEnumerator ChangeDoorState(float rotateDegrees, bool isOpen)
+    {
+        if (m_DoorStateChanging)
+            yield break;
+
+        m_DoorStateChanging = true;
+        float duration = 0.5f;
+        float startRotation = transform.eulerAngles.y;
+        float endRotation = startRotation + rotateDegrees;
+        float t = 0.0f;
+        GetComponent<BoxCollider>().enabled = false;
+
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            float yRotation = Mathf.Lerp(startRotation, endRotation, t / duration) % 360.0f;
+            transform.localEulerAngles = new Vector3(0f, yRotation, 0f);
+            yield return null;
+        }
+
+        m_IsOpen = isOpen;
+        GetComponent<BoxCollider>().enabled = true;
+        m_DoorStateChanging = false;
     }
 
     public void Unlock()
     {
-        UIFactory.CreateDialogue("The door is unlocked now.");
+        if (DestroyWhenUnlocked != null)
+            Destroy(DestroyWhenUnlocked);
         Locked = false;
+        OnUnlock?.Invoke();
     }
 }

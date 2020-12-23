@@ -47,7 +47,6 @@ public class ZombieController : MonoBehaviour
         if (ShouldAttack())
             m_State = ZombieState.Attacking;
 
-        Debug.Log(m_State);
         switch (m_State)
         {
             case ZombieState.Waiting:

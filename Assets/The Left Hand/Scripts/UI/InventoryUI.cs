@@ -65,32 +65,25 @@ public class InventoryUI : Escape
                     GameObject context = Instantiate(ItemContextMenu, spawnPosition, Quaternion.identity, Canvas.transform);
 
                     GameObject useButton = context.transform.Find("Use").gameObject;
-                    GameObject combineButton = context.transform.Find("Combine").gameObject;
+                    //GameObject combineButton = context.transform.Find("Combine").gameObject;
                     GameObject destroyButton = context.transform.Find("Discard").gameObject;
 
                     useButton.GetComponentInChildren<Button>().onClick.AddListener(() =>
                     {
                         if (callbackForSelectedItem != null)
-                        {
-                            if (callbackForSelectedItem(item))
-                                Debug.Log("Success!");
-                            else
-                                Debug.Log("Failure");
-                        }
+                            callbackForSelectedItem(item);
                         else if (item.GetComponent<IUseable>() != null)
                             item.GetComponent<IUseable>().Use();
-                        else
-                            Debug.Log("Failure");
 
                         ClearContextMenus();
                         Close();
                     });
 
-                    combineButton.GetComponentInChildren<Button>().onClick.AddListener(() =>
-                    {
-                        //TODO
-                        ClearContextMenus();
-                    });
+                    //combineButton.GetComponentInChildren<Button>().onClick.AddListener(() =>
+                    //{
+                    //    //TODO
+                    //    ClearContextMenus();
+                    //});
 
                     destroyButton.GetComponentInChildren<Button>().onClick.AddListener(() =>
                     {
@@ -113,6 +106,7 @@ public class InventoryUI : Escape
         });
 
         m_CreatedButtons.Add(closeButton);
+        UIFactory.RegisterUI(MakeActive);
     }
 
     protected override void Cleanup()
@@ -136,5 +130,6 @@ public class InventoryUI : Escape
         foreach (GameObject button in m_CreatedButtons)
             Destroy(button);
         m_CreatedButtons.Clear();
+        UIFactory.UIEnabled(false);
     }
 }

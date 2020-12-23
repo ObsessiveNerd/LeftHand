@@ -5,10 +5,10 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class GrandfatherClock : MonoBehaviour, IInteractable
+public class GrandfatherClock : InteractableObject
 {
     public string CorrectTime;
-    public string UseWord { get { return "Look"; } }
+    public override string UseWord { get { return "Look"; } }
     public GameObject SubmitTime;
     public GameObject KeyReward;
 
@@ -16,7 +16,7 @@ public class GrandfatherClock : MonoBehaviour, IInteractable
     bool m_KeyTook = false;
     string m_Time = "2:46";
 
-    public bool Interact()
+    public override bool Interact()
     {
         if (!m_IsOpen)
         {
@@ -44,7 +44,7 @@ public class GrandfatherClock : MonoBehaviour, IInteractable
         return true;
     }
 
-    public bool Interact(GameObject objectToUse)
+    public override bool Interact(GameObject objectToUse)
     {
         return false;
     }
