@@ -12,7 +12,9 @@ public class Escape : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKeyDown(KeyCode.Escape) || AlternativeCloseRequirementMet())
             Cleanup();
     }
+
+    protected virtual bool AlternativeCloseRequirementMet() { return false; }
 }

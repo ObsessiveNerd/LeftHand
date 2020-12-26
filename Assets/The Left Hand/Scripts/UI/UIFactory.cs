@@ -7,12 +7,14 @@ using UnityEngine.UI;
 
 public struct FactoryButton
 {
-    public FactoryButton(string text, Action action)
+    public FactoryButton(string text, Action action, bool isItem = false)
     {
         ButtonAction = action;
         ButtonText = text;
+        IsItem = isItem;
     }
 
+    public bool IsItem;
     public Action ButtonAction;
     public string ButtonText;
 }
@@ -86,8 +88,15 @@ public class UIFactory : MonoBehaviour
         foreach (FactoryButton button in buttons)
         {
             GameObject newButton = Instantiate(m_Instance.Button, parent);
-            newButton.GetComponentInChildren<TextMeshProUGUI>().text = button.ButtonText;
+            if(!button.IsItem)
+                newButton.GetComponentInChildren<TextMeshProUGUI>().text = button.ButtonText;
             newButton.GetComponent<Button>().onClick.AddListener(() => button.ButtonAction());
+
+            if (button.IsItem)
+            {
+                var image = newButton.GetComponent<Image>();
+                image.sprite = Services.Sprite.GetSpriteForKey(button.ButtonText);
+            }
         }
     }
 

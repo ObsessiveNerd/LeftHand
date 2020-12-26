@@ -11,9 +11,10 @@ public class InventoryUI : Escape
     public GameObject Grid;
     public GameObject Button;
     public GameObject Canvas;
-
+    public TextMeshProUGUI ItemName;
     public GameObject WeaponContextMenu;
     public GameObject ItemContextMenu;
+    public Image EquipedItem;
 
     List<GameObject> m_CreatedButtons = new List<GameObject>();
     List<GameObject> m_ContextMenus = new List<GameObject>();
@@ -21,13 +22,18 @@ public class InventoryUI : Escape
     public void Open(List<GameObject> items, Func<GameObject, bool> callbackForSelectedItem = null)
     {
         MakeActive.SetActive(true);
-        foreach(GameObject item in items)
+        foreach (GameObject item in items)
         {
             if (item == null)
                 continue;
 
             GameObject button = Instantiate(Button, Grid.transform);
-            button.GetComponentInChildren<TextMeshProUGUI>().text = item.name;
+            button.GetComponentInChildren<TextMeshProUGUI>().text = "";
+            
+            var image = button.GetComponent<Image>();
+            image.sprite = Services.Sprite.GetSpriteForKey(item.name);
+
+            button.AddComponent<InventoryButtonBehavior>().Init(ItemName, item.GetComponent<InteractableObject>());
 
             //Temp, will need to add context menu at some point
             IWeapon weapon = item.GetComponent<IWeapon>();
@@ -39,19 +45,35 @@ public class InventoryUI : Escape
                     Vector3 spawnPosition = button.transform.position;
                     spawnPosition.x += 50;
                     spawnPosition.y -= 25;
+
                     GameObject context = Instantiate(WeaponContextMenu, spawnPosition, Quaternion.identity, Canvas.transform);
                     bool clickedWeaponIsAlreadyEquiped = FindObjectOfType<PlayerController>().CurrentEquipment == weapon;
-                    context.GetComponentInChildren<TextMeshProUGUI>().text = clickedWeaponIsAlreadyEquiped ? "Unequip" : "Equip";
-                    context.GetComponentInChildren<Button>().onClick.AddListener(() =>
+
+                    GameObject equipButton = context.transform.Find("Equip").gameObject;
+                    equipButton.GetComponentInChildren<TextMeshProUGUI>().text = clickedWeaponIsAlreadyEquiped ? "Unequip" : "Equip";
+                    equipButton.GetComponent<Button>().onClick.AddListener(() =>
                     {
                         if (clickedWeaponIsAlreadyEquiped)
+                        {
                             FindObjectOfType<PlayerController>().UnequipWeapon();
+                            ItemUnequiped();
+                        }
                         else
+                        {
                             FindObjectOfType<PlayerController>().Equip(weapon);
+                            ItemEquiped(weapon.WeaponName);
+                        }
                         ClearContextMenus();
                     });
                     m_ContextMenus.Add(context);
-                    
+
+                    GameObject destroyButton = context.transform.Find("Discard").gameObject;
+                    destroyButton.GetComponentInChildren<Button>().onClick.AddListener(() =>
+                    {
+                        FindObjectOfType<Inventory>().RemoveFromInventory(item);
+                        ClearContextMenus();
+                    });
+
                 });
             }
             else
@@ -98,14 +120,14 @@ public class InventoryUI : Escape
             m_CreatedButtons.Add(button);
         }
 
-        GameObject closeButton = Instantiate(Button, Grid.transform);
-        closeButton.GetComponentInChildren<TextMeshProUGUI>().text = "Close";
-        closeButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            Close();
-        });
+        //GameObject closeButton = Instantiate(Button, Grid.transform);
+        //closeButton.GetComponentInChildren<TextMeshProUGUI>().text = "Close";
+        //closeButton.GetComponent<Button>().onClick.AddListener(() =>
+        //{
+        //    Close();
+        //});
 
-        m_CreatedButtons.Add(closeButton);
+        //m_CreatedButtons.Add(closeButton);
         UIFactory.RegisterUI(MakeActive);
     }
 
@@ -116,6 +138,21 @@ public class InventoryUI : Escape
         else
             Close();
     }
+
+    public void ItemEquiped(string ItemName)
+    {
+        EquipedItem.sprite = Services.Sprite.GetSpriteForKey(ItemName);
+    }
+
+    public void ItemUnequiped()
+    {
+        EquipedItem.sprite = null;
+    }
+
+    //protected override bool AlternativeCloseRequirementMet()
+    //{
+    //    return Input.GetKeyDown(KeyCode.I) && MakeActive.activeInHierarchy;
+    //}
 
     void ClearContextMenus()
     {

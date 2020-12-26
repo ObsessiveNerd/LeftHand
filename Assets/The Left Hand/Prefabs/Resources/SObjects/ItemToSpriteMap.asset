@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef4bb7d120c3fa44e9d5516b52537894, type: 3}
+  m_Name: ItemToSpriteMap
+  m_EditorClassIdentifier: 
+  ItemToSpriteList:
+  - ObjectKey: Handgun
+    Sprite: {fileID: 21300000, guid: 2cb318c0153243440bd4736d07b79ee9, type: 3}
+  - ObjectKey: Knife
+    Sprite: {fileID: 21300000, guid: 02b592cb9f3384a4680a1fe78885db30, type: 3}
+  - ObjectKey: Health Potion
+    Sprite: {fileID: 21300000, guid: c0b98787e91b0db43ab1d4327f80c341, type: 3}
+  - ObjectKey: Ammo
+    Sprite: {fileID: 21300000, guid: 73d7bc2c9f34dc44baec17fd290228ee, type: 3}
+  - ObjectKey: Boltcutters
+    Sprite: {fileID: 21300000, guid: 017679417d17cf946af644e11b2083ff, type: 3}
+  - ObjectKey: Saphire
+    Sprite: {fileID: 21300000, guid: 5dc8b8feb6d24e14d9b6f39637d6ca25, type: 3}
+  - ObjectKey: Emerald
+    Sprite: {fileID: 21300000, guid: 45f1b74c5c9e28d4e90fed4e8767aea7, type: 3}
+  - ObjectKey: Clover Key
+    Sprite: {fileID: 21300000, guid: 8b6a853657d39ec45936813a786466db, type: 3}
+  - ObjectKey: Diamond Key
+    Sprite: {fileID: 21300000, guid: 763c63b3701f5f0469b51cc866742d51, type: 3}
+  - ObjectKey: Odd Shaped Key
+    Sprite: {fileID: 21300000, guid: 5b1978ff7a7d0a24590411cf78403910, type: 3}
+  - ObjectKey: Front Door Key
+    Sprite: {fileID: 21300000, guid: befef045fa25f864f9562f2f7d917544, type: 3}

@@ -12,20 +12,24 @@ public class Inventory : MonoBehaviour
 
     GameObject[] m_Inventory = new GameObject[kMaxInventory];
     int m_NumberOfItems = 0;
+    bool m_Open;
 
     public void Open()
     {
         UI.Open(InventoryList);
+        m_Open = true;
     }
 
     public void OpenForUseWith(Func<GameObject, bool> callbackForSelectedItem)
     {
         UI.Open(InventoryList, callbackForSelectedItem);
+        m_Open = true;
     }
 
     public void Close()
     {
         UI.Close();
+        m_Open = false;
     }
 
     public bool AddToInventory(GameObject objectToAdd)

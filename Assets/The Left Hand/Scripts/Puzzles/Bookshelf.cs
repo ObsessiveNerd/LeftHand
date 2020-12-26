@@ -17,7 +17,7 @@ public class Bookshelf : Escape, IPuzzle
     {
         if(m_CurrentNumber != book.OrderNumber)
         {
-            UIFactory.CreateDialogue("Hmmm... something seems wrong.", true, () => UIFactory.UIEnabled(true));
+            UIFactory.CreateDialogue("Hmmm... something seems wrong.", true, () => UIFactory.UIEnabled(false));
             m_CurrentNumber = 0;
         }
         else

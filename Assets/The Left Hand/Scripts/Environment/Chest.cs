@@ -72,7 +72,7 @@ public class Chest : InteractableObject, IUnlockable
                         Open();
                     else
                         Close();
-                }));
+                }, true));
             }
             UIFactory.CreateCustomUI(ChestUI, buttons.ToArray());
         }
