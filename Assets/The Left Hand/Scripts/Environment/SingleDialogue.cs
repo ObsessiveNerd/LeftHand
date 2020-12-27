@@ -2,18 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SingleDialogue : MonoBehaviour, IInteractable
+public class SingleDialogue : InteractableObject
 {
     public string Dialogue;
-    public string UseWord { get { return "Investigate"; } }
+    public override string UseWord { get { return "Investigate"; } }
 
-    public bool Interact()
+    public override bool Interact()
     {
         UIFactory.CreateDialogue(Dialogue);
         return true;
     }
 
-    public bool Interact(GameObject objectToUse)
+    public override bool Interact(GameObject objectToUse)
     {
         return false;
     }

@@ -73,9 +73,9 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 0.6415094, g: 0.58401567, b: 0.58401567, a: 1}
-  m_Intensity: 2
-  m_Range: 21.49
+  m_Color: {r: 0.9528302, g: 0.84108657, b: 0.57079923, a: 1}
+  m_Intensity: 1.6
+  m_Range: 16.11
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 5004296679042009501}
   - component: {fileID: 5004296679042009503}
   - component: {fileID: 5004296679042009500}
+  - component: {fileID: 1436025162}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -206,6 +207,8 @@ MonoBehaviour:
   Ammo: {fileID: 0}
   Animator: {fileID: 8619338777782747656}
   MoveSpeed: 3
+  RightHandContainer: {fileID: 8619338777790050336}
+  DeadUI: {fileID: 0}
 --- !u!114 &5004296679042009503
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +235,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HealthUI: {fileID: 0}
+  BloodSpurt: {fileID: 1000013355911406, guid: d32aa916f50cac94db11e6f19821a58f, type: 3}
   Health: 10
+--- !u!114 &1436025162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5004296679042009495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e9654eec920cb9488756d5c6ef892e8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TextPrefab: {fileID: 3352154153717891573, guid: 5c068dbc04c9e8d4ea743815845f97f6,
+    type: 3}
+  Canvas: {fileID: 0}
+  Distance: 3
 --- !u!1 &5004296679083844068
 GameObject:
   m_ObjectHideFlags: 0
@@ -361,17 +381,17 @@ PrefabInstance:
     - target: {fileID: 8619338778009177163, guid: 47a3741b253f088469eedd6d403dd89a,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.5
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 8619338778009177163, guid: 47a3741b253f088469eedd6d403dd89a,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 1.5
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 8619338778009177163, guid: 47a3741b253f088469eedd6d403dd89a,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.5
+      value: 1.2
       objectReference: {fileID: 0}
     - target: {fileID: 8619338778009177163, guid: 47a3741b253f088469eedd6d403dd89a,
         type: 3}
@@ -434,6 +454,12 @@ Transform:
 --- !u!95 &8619338777782747656 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 8619338777999598093, guid: 47a3741b253f088469eedd6d403dd89a,
+    type: 3}
+  m_PrefabInstance: {fileID: 219668485}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8619338777790050336 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8619338778009079845, guid: 47a3741b253f088469eedd6d403dd89a,
     type: 3}
   m_PrefabInstance: {fileID: 219668485}
   m_PrefabAsset: {fileID: 0}

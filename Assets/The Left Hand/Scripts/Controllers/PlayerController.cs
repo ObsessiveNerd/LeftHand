@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IContoller
 {
     public TextMeshProUGUI Ammo;
     public Animator Animator;
     public float MoveSpeed;
     public GameObject RightHandContainer;
+    public GameObject DeadUI;
+
+    public AudioClip Reloading;
+    public AudioClip Dying;
 
     public IWeapon CurrentEquipment
     {
@@ -23,15 +27,23 @@ public class PlayerController : MonoBehaviour
     private Rigidbody m_RigidBody;
     private IWeapon m_CurrentWeapon;
     private GameObject m_CurrentWeaponInstance;
+    private Inventory m_Inventory;
+    private bool m_Dead = false;
+    private AudioSource m_AudioSource;
 
     void Start()
     {
         m_RigidBody = GetComponent<Rigidbody>();
         m_BaseMoveSpeed = MoveSpeed;
+        m_Inventory = GetComponent<Inventory>();
+        m_AudioSource = GetComponent<AudioSource>();
     }
 
     void Update()
     {
+        if (m_Dead)
+            return;
+
         CheckForAttacking();        
         ProcessMovement();
 
@@ -63,8 +75,13 @@ public class PlayerController : MonoBehaviour
         {
             if(m_CurrentWeapon is IReloadable)
             {
-                (m_CurrentWeapon as IReloadable).Reload(5, out int leftover);
-                Debug.Log("Leftover bullets: " + leftover);
+                int totalAmmo = m_Inventory.GetAmmoCount();
+                if (totalAmmo > 0)
+                {
+                    m_AudioSource.PlayOneShot(Reloading);
+                    (m_CurrentWeapon as IReloadable).Reload(totalAmmo, out int leftover);
+                    m_Inventory.RemoveAmmo((Mathf.Min(totalAmmo, 10)) - leftover);
+                }
             }
         }
     }
@@ -102,7 +119,8 @@ public class PlayerController : MonoBehaviour
             if (m_CurrentWeapon != null)
             {
                 Animator.SetTrigger(AnimatorVariables.Attack);
-                m_CurrentWeapon?.Attack(gameObject, transform.forward);
+                m_CurrentWeapon?.Attack(m_CurrentWeaponInstance, transform.forward);
+                m_AudioSource.PlayOneShot(CurrentEquipment.AttackSound);
             }
         }
     }
@@ -134,6 +152,9 @@ public class PlayerController : MonoBehaviour
 
     public void Equip(IWeapon weapon)
     {
+        if (m_CurrentWeapon != null)
+            UnequipWeapon();
+
         if (weapon != null)
         {
             m_CurrentWeapon = weapon;
@@ -144,6 +165,7 @@ public class PlayerController : MonoBehaviour
 
             m_CurrentWeaponInstance = Instantiate(Resources.Load<GameObject>(weapon.WeaponName), RightHandContainer.transform);
             m_CurrentWeaponInstance.GetComponent<InteractableObject>().enabled = false;
+            m_CurrentWeaponInstance.GetComponent<Collider>().enabled = false;
         }
     }
 
@@ -153,5 +175,15 @@ public class PlayerController : MonoBehaviour
         Animator.SetBool(AnimatorVariables.HasMelee, false);
         Animator.SetBool(AnimatorVariables.HasGun, false);
         Destroy(m_CurrentWeaponInstance);
+    }
+
+    public void Die()
+    {
+        if (m_Dead)
+            return;
+
+        m_Dead = true;
+        DeadUI.SetActive(true);
+        m_AudioSource.PlayOneShot(Dying);
     }
 }

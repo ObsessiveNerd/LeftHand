@@ -10,9 +10,19 @@ public class Door : InteractableObject, IUnlockable
     public GameObject DestroyWhenUnlocked;
     public string DescriptionText;
     public Action OnUnlock;
+    public AudioClip DoorMovingClip;
+    public AudioClip DoorUnlocked;
 
+    AudioSource m_Audio;
     bool m_IsOpen = false;
     bool m_DoorStateChanging = false;
+
+    new void Awake()
+    {
+        base.Awake();
+        m_Audio = gameObject.AddComponent<AudioSource>();
+        m_Audio.volume = 0.01f;
+    }
 
     public override string UseWord
     {
@@ -66,11 +76,15 @@ public class Door : InteractableObject, IUnlockable
     public void Open()
     {
         if (!Locked)
+        {
+            m_Audio.PlayOneShot(DoorMovingClip);
             StartCoroutine(ChangeDoorState(60f, true));
+        }
     }
 
     public void Close()
     {
+        m_Audio.PlayOneShot(DoorMovingClip);
         StartCoroutine(ChangeDoorState(-60f, false));
     }
 
@@ -104,6 +118,7 @@ public class Door : InteractableObject, IUnlockable
         if (DestroyWhenUnlocked != null)
             Destroy(DestroyWhenUnlocked);
         Locked = false;
+        m_Audio.PlayOneShot(DoorUnlocked);
         OnUnlock?.Invoke();
     }
 }

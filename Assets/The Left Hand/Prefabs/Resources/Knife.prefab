@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d940e629ed91e5b40a3b7b9642cff19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HasBeenPickedUp: 0
 --- !u!114 &1588890983984622691
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -71,9 +72,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af918f73438af7949bef23416908da27, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Damage: 1
+  Damage: 5
   Distance: 1.5
   Prefab: {fileID: 1588890983984622688}
+  AttackClip: {fileID: 8300000, guid: 00b078ddaa642bf4295810d8d9128ceb, type: 3}
 --- !u!1001 &430243463
 PrefabInstance:
   m_ObjectHideFlags: 0

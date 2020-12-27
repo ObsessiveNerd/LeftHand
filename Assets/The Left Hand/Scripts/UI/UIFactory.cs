@@ -49,7 +49,11 @@ public class UIFactory : MonoBehaviour
         }
 
         foreach (var ui in m_PuzzleUIs)
+        {
+            if (ui == null)
+                m_PuzzleUIs.Remove(ui);
             ui.SetActive(false);
+        }
     }
 
     public static void CreateDialogue(string text, bool hasLeaveButton = true, Action leaveCallback = null, params FactoryButton[] buttons)

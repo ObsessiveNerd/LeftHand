@@ -7,6 +7,7 @@ public class Knife : InteractableObject, IWeapon
     public int Damage;
     public float Distance;
     public GameObject Prefab;
+    public AudioClip AttackClip;
 
     Vector3 m_StartPosition;
     Quaternion m_StartRot;
@@ -28,25 +29,38 @@ public class Knife : InteractableObject, IWeapon
         }
     }
 
+    public AudioClip AttackSound => AttackClip;
+
     void Start()
     {
         m_Cooldown = new Cooldown();
     }
 
+    new void Update()
+    {
+        var player = GameObject.FindGameObjectWithTag("Player");
+        Debug.DrawRay(player.transform.position, player.transform.forward);
+    }
+
     public void Attack(GameObject source, Vector3 direction)
     {
-        Vector3 mouse = Input.mousePosition;
-        Ray ray = Camera.main.ScreenPointToRay(mouse);
+        if (m_Cooldown == null)
+            m_Cooldown = new Cooldown();
+
         RaycastHit hitInfo;
-        if (Physics.Raycast(ray, out hitInfo))
+        var player = GameObject.FindGameObjectWithTag("Player");
+        Debug.DrawRay(player.transform.position, player.transform.forward);
+        if (Physics.Raycast(player.transform.position, player.transform.forward, out hitInfo))
         {
-            if (hitInfo.collider.gameObject.tag == "Enemy" &&
+            Debug.Log(hitInfo.collider.gameObject.name);
+            if (hitInfo.collider?.gameObject.tag == "Enemy" &&
                 Vector3.Distance(hitInfo.collider.gameObject.transform.position, source.transform.position) < Distance &&
                 m_Cooldown.IsReady)
             {
                 var healthController = hitInfo.collider.gameObject.GetComponent<HealthController>();
                 healthController.TakeDamage(Damage);
-                StartCoroutine(m_Cooldown.BeginCooldown());
+                if(isActiveAndEnabled)
+                    StartCoroutine(m_Cooldown.BeginCooldown());
             }
         }
     }

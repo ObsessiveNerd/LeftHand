@@ -59,6 +59,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d940e629ed91e5b40a3b7b9642cff19e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HasBeenPickedUp: 0
 --- !u!114 &6326120315605273687
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -75,6 +76,7 @@ MonoBehaviour:
   StartingBullets: 8
   kMaxBullets: 10
   Prefab: {fileID: 0}
+  AttackClip: {fileID: 8300000, guid: 535e2a45932b7b1489ff1bbfa04065f2, type: 3}
 --- !u!1001 &1342436424
 PrefabInstance:
   m_ObjectHideFlags: 0

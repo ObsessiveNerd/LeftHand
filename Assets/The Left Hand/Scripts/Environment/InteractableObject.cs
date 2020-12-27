@@ -19,7 +19,7 @@ public class InteractableObject : MonoBehaviour, IInteractable
     InteractableController m_InteractableController;
 
     // Start is called before the first frame update
-    void Awake()
+    protected void Awake()
     {
         m_InteractableController = GameObject.FindWithTag("Player").GetComponent<InteractableController>();
     }

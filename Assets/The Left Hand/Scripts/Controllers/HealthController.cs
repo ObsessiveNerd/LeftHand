@@ -6,32 +6,40 @@ using TMPro;
 public class HealthController : MonoBehaviour
 {
     public TextMeshProUGUI HealthUI;
+    public GameObject BloodSpurt;
 
     public int Health;
     private const int m_MaxHealth = 10;
 
     private void Update()
     {
-        if(HealthUI != null)
+        if (HealthUI != null)
             HealthUI.text = $"Health: {Health}";
     }
 
     public void TakeDamage(int damageAmount)
     {
         Health = Mathf.Clamp(Health - damageAmount, 0, m_MaxHealth);
+        StartCoroutine(DestroyAfterTime(Instantiate(BloodSpurt, transform.position, Quaternion.identity)));
         if (Health == 0)
             Die();
     }
 
     public void Heal(int healAmount)
     {
-        Debug.Log("Before: " + Health);
         Health = Mathf.Clamp(Health + healAmount, 0, m_MaxHealth);
-        Debug.Log("After: " + Health);
+    }
+
+    IEnumerator DestroyAfterTime(GameObject go)
+    {
+        yield return new WaitForSeconds(0.4f);
+        Destroy(go);
     }
 
     public void Die()
     {
-        Destroy(gameObject);
+        GetComponentInChildren<Animator>().SetBool(AnimatorVariables.Dead, true);
+        GetComponent<IContoller>().Die();
     }
 }
+

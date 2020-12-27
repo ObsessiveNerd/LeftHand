@@ -6,6 +6,7 @@ public interface IWeapon
 {
     string WeaponName { get; }
     void Attack(GameObject source, Vector3 direction);
+    AudioClip AttackSound { get; }
 }
 
 public interface IReloadable
